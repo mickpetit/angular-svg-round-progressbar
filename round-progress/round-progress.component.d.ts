@@ -1,8 +1,8 @@
-import { OnChanges, NgZone, EventEmitter, Renderer } from '@angular/core';
+import { OnChanges, NgZone, EventEmitter, Renderer, OnInit } from '@angular/core';
 import { RoundProgressService } from './round-progress.service';
 import { RoundProgressDefaults } from './round-progress.config';
 import { RoundProgressEase } from './round-progress.ease';
-export declare class RoundProgressComponent implements OnChanges {
+export declare class RoundProgressComponent implements OnChanges, OnInit {
     private _service;
     private _easing;
     private _defaults;
@@ -22,6 +22,8 @@ export declare class RoundProgressComponent implements OnChanges {
     resolveColor(color: string): string;
     /** Change detection callback. */
     ngOnChanges(changes: any): void;
+    /** On init callback */
+    ngOnInit(): void;
     /** Diameter of the circle. */
     readonly _diameter: number;
     /** The CSS height of the wrapper element. */
@@ -38,6 +40,7 @@ export declare class RoundProgressComponent implements OnChanges {
     animationDelay: number;
     duration: number;
     stroke: number;
+    strokeBackground?: number;
     color: string;
     background: string;
     responsive: boolean;
