@@ -13,4 +13,6 @@ export interface RoundProgressDefaults {
     clockwise?: boolean;
     semicircle?: boolean;
     rounded?: boolean;
+    internalCircle?: boolean;
+    internalCircleRadius?: number;
 }

@@ -35,6 +35,8 @@ var RoundProgressComponent = /** @class */ (function () {
         this.clockwise = this._defaults.clockwise;
         this.semicircle = this._defaults.semicircle;
         this.rounded = this._defaults.rounded;
+        this.internalCircle = this._defaults.internalCircle;
+        this.internalCircleRadius = this._defaults.internalCircleRadius;
         this.onRender = new core_1.EventEmitter();
     }
     /** Animates a change in the current value. */
@@ -111,6 +113,9 @@ var RoundProgressComponent = /** @class */ (function () {
         if (this.strokeBackground == undefined) {
             this.strokeBackground = this.stroke;
         }
+        if (this.internalCircleColor == undefined) {
+            this.internalCircleColor = this.color;
+        }
     };
     Object.defineProperty(RoundProgressComponent.prototype, "_diameter", {
         /** Diameter of the circle. */
@@ -183,10 +188,6 @@ var RoundProgressComponent = /** @class */ (function () {
     ], RoundProgressComponent.prototype, "stroke", void 0);
     __decorate([
         core_1.Input(),
-        __metadata("design:type", Number)
-    ], RoundProgressComponent.prototype, "strokeBackground", void 0);
-    __decorate([
-        core_1.Input(),
         __metadata("design:type", String)
     ], RoundProgressComponent.prototype, "color", void 0);
     __decorate([
@@ -210,13 +211,29 @@ var RoundProgressComponent = /** @class */ (function () {
         __metadata("design:type", Boolean)
     ], RoundProgressComponent.prototype, "rounded", void 0);
     __decorate([
+        core_1.Input(),
+        __metadata("design:type", Number)
+    ], RoundProgressComponent.prototype, "strokeBackground", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", Boolean)
+    ], RoundProgressComponent.prototype, "internalCircle", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", Number)
+    ], RoundProgressComponent.prototype, "internalCircleRadius", void 0);
+    __decorate([
+        core_1.Input(),
+        __metadata("design:type", String)
+    ], RoundProgressComponent.prototype, "internalCircleColor", void 0);
+    __decorate([
         core_1.Output(),
         __metadata("design:type", core_1.EventEmitter)
     ], RoundProgressComponent.prototype, "onRender", void 0);
     RoundProgressComponent = __decorate([
         core_1.Component({
             selector: 'round-progress',
-            template: "\n    <svg xmlns=\"http://www.w3.org/2000/svg\" [attr.viewBox]=\"_viewBox\">\n      <circle\n        fill=\"none\"\n        [attr.cx]=\"radius\"\n        [attr.cy]=\"radius\"\n        [attr.r]=\"radius - stroke / 2\"\n        [style.stroke]=\"resolveColor(background)\"\n        [style.stroke-width]=\"strokeBackground\"/>\n\n      <path\n        #path\n        fill=\"none\"\n        [style.stroke-width]=\"stroke\"\n        [style.stroke]=\"resolveColor(color)\"\n        [style.stroke-linecap]=\"rounded ? 'round' : ''\"\n        [attr.transform]=\"getPathTransform()\"/>\n    </svg>\n  ",
+            template: "\n    <svg xmlns=\"http://www.w3.org/2000/svg\" [attr.viewBox]=\"_viewBox\">\n      <circle *ngIf=\"internalCircle\"\n        [attr.fill]=\"internalCircleColor\"\n        [attr.cx]=\"radius\"\n        [attr.cy]=\"radius\"\n        [attr.r]=\"internalCircleRadius\"/>\n        \n      <circle\n        fill=\"none\"\n        [attr.cx]=\"radius\"\n        [attr.cy]=\"radius\"\n        [attr.r]=\"radius - stroke / 2\"\n        [style.stroke]=\"resolveColor(background)\"\n        [style.stroke-width]=\"strokeBackground\"/>\n\n      <path\n        #path\n        fill=\"none\"\n        [style.stroke-width]=\"stroke\"\n        [style.stroke]=\"resolveColor(color)\"\n        [style.stroke-linecap]=\"rounded ? 'round' : ''\"\n        [attr.transform]=\"getPathTransform()\"/>\n    </svg>\n  ",
             host: {
                 'role': 'progressbar',
                 '[attr.aria-valuemin]': 'current',

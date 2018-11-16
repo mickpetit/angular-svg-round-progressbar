@@ -15,7 +15,9 @@ exports.ROUND_PROGRESS_DEFAULTS_PROVIDER = {
         responsive: false,
         clockwise: true,
         semicircle: false,
-        rounded: false
+        rounded: false,
+        internalCircle: true,
+        internalCircleRadius: 100
     }
 };
 //# sourceMappingURL=round-progress.config.js.map

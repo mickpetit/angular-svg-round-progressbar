@@ -19,16 +19,20 @@ var DemoComponent = /** @class */ (function () {
         this.stroke = 15;
         this.radius = 125;
         this.semicircle = false;
-        this.rounded = false;
+        this.rounded = true;
         this.responsive = false;
         this.clockwise = true;
         this.color = '#45ccce';
         this.background = '#eaeaea';
+        this.strokeBackground = 10;
         this.duration = 800;
         this.animation = 'easeOutCubic';
         this.animationDelay = 0;
         this.animations = [];
         this.gradient = false;
+        this.internalCircle = true;
+        this.internalColor = '#eaeaea';
+        this.internalRadius = 100;
         this.realCurrent = 0;
         // Kinda hacky way to get all of the easing functions at run-time, because it can
         // technically fetch something from up the prototype chain.

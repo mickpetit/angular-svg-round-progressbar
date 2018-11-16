@@ -11,11 +11,15 @@ export declare class DemoComponent {
     clockwise: boolean;
     color: string;
     background: string;
+    strokeBackground: number;
     duration: number;
     animation: string;
     animationDelay: number;
     animations: string[];
     gradient: boolean;
+    internalCircle: boolean;
+    internalColor: string;
+    internalRadius: number;
     realCurrent: number;
     constructor(_ease: RoundProgressEase);
     increment(amount?: number): void;

@@ -40,12 +40,15 @@ export declare class RoundProgressComponent implements OnChanges, OnInit {
     animationDelay: number;
     duration: number;
     stroke: number;
-    strokeBackground?: number;
     color: string;
     background: string;
     responsive: boolean;
     clockwise: boolean;
     semicircle: boolean;
     rounded: boolean;
+    strokeBackground?: number;
+    internalCircle: boolean;
+    internalCircleRadius: number;
+    internalCircleColor?: string;
     onRender: EventEmitter<number>;
 }
