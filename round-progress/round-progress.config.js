@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ROUND_PROGRESS_DEFAULTS_PROVIDER = exports.ROUND_PROGRESS_DEFAULTS = void 0;
 var core_1 = require("@angular/core");
 exports.ROUND_PROGRESS_DEFAULTS = new core_1.InjectionToken('ROUND_PROGRESS_DEFAULTS');
 exports.ROUND_PROGRESS_DEFAULTS_PROVIDER = {

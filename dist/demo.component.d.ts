@@ -24,10 +24,10 @@ export declare class DemoComponent {
     constructor(_ease: RoundProgressEase);
     increment(amount?: number): void;
     getOverlayStyle(): {
-        'top': string;
-        'bottom': string;
-        'left': string;
-        'transform': string;
+        top: string;
+        bottom: string;
+        left: string;
+        transform: string;
         '-moz-transform': string;
         '-webkit-transform': string;
         'font-size': string;

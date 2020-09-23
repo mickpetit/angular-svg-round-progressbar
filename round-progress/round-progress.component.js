@@ -12,32 +12,46 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RoundProgressComponent = void 0;
 var core_1 = require("@angular/core");
 var round_progress_service_1 = require("./round-progress.service");
 var round_progress_config_1 = require("./round-progress.config");
 var round_progress_ease_1 = require("./round-progress.ease");
 var RoundProgressComponent = /** @class */ (function () {
-    function RoundProgressComponent(_service, _easing, _defaults, _ngZone, _renderer) {
+    function RoundProgressComponent(_service, _easing, _defaults, _ngZone) {
         this._service = _service;
         this._easing = _easing;
         this._defaults = _defaults;
         this._ngZone = _ngZone;
-        this._renderer = _renderer;
-        this._lastAnimationId = 0;
+        /** Radius of the circle. */
         this.radius = this._defaults.radius;
+        /** Name of the easing function to use when animating. */
         this.animation = this._defaults.animation;
+        /** Time in millisconds by which to delay the animation. */
         this.animationDelay = this._defaults.animationDelay;
+        /** Duration of the animation. */
         this.duration = this._defaults.duration;
+        /** Width of the circle's stroke. */
         this.stroke = this._defaults.stroke;
+        /** Color of the circle. */
         this.color = this._defaults.color;
+        /** Background color of the circle. */
         this.background = this._defaults.background;
+        /** Whether the circle should take up the width of its parent. */
         this.responsive = this._defaults.responsive;
+        /** Whether the circle is filling up clockwise. */
         this.clockwise = this._defaults.clockwise;
+        /** Whether to render a semicircle. */
         this.semicircle = this._defaults.semicircle;
+        /** Whether the tip of the progress should be rounded off. */
         this.rounded = this._defaults.rounded;
+        /** Whether internal circle should be showed */
         this.internalCircle = this._defaults.internalCircle;
+        /** Whether the internal circle is showed, should be the circle radius */
         this.internalCircleRadius = this._defaults.internalCircleRadius;
+        /** Emits when a new value has been rendered. */
         this.onRender = new core_1.EventEmitter();
+        this._lastAnimationId = 0;
     }
     /** Animates a change in the current value. */
     RoundProgressComponent.prototype._animateChange = function (from, to) {
@@ -76,7 +90,8 @@ var RoundProgressComponent = /** @class */ (function () {
     /** Sets the path dimensions. */
     RoundProgressComponent.prototype._setPath = function (value) {
         if (this._path) {
-            this._renderer.setElementAttribute(this._path.nativeElement, 'd', this._service.getArc(value, this.max, this.radius - this.stroke / 2, this.radius, this.semicircle));
+            var arc = this._service.getArc(value, this.max, this.radius - this.stroke / 2, this.radius, this.semicircle);
+            this._path.nativeElement.setAttribute('d', arc);
         }
     };
     /** Clamps a value between the maximum and 0. */
@@ -85,7 +100,7 @@ var RoundProgressComponent = /** @class */ (function () {
     };
     /** Determines the SVG transforms for the <path> node. */
     RoundProgressComponent.prototype.getPathTransform = function () {
-        var diameter = this._diameter;
+        var diameter = this._getDiameter();
         if (this.semicircle) {
             return this.clockwise ?
                 "translate(0, " + diameter + ") rotate(-90)" :
@@ -107,57 +122,41 @@ var RoundProgressComponent = /** @class */ (function () {
         else {
             this._setPath(this.current);
         }
+        this._updateInternalCircleElement();
     };
-    /** On init callback */
-    RoundProgressComponent.prototype.ngOnInit = function () {
-        if (this.strokeBackground == undefined) {
-            this.strokeBackground = this.stroke;
-        }
-        if (this.internalCircleColor == undefined) {
-            this.internalCircleColor = this.color;
+    /** Diameter of the circle. */
+    RoundProgressComponent.prototype._getDiameter = function () {
+        return this.radius * 2;
+    };
+    /** The CSS height of the wrapper element. */
+    RoundProgressComponent.prototype._getElementHeight = function () {
+        if (!this.responsive) {
+            return (this.semicircle ? this.radius : this._getDiameter()) + 'px';
         }
     };
-    Object.defineProperty(RoundProgressComponent.prototype, "_diameter", {
-        /** Diameter of the circle. */
-        get: function () {
-            return this.radius * 2;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RoundProgressComponent.prototype, "_elementHeight", {
-        /** The CSS height of the wrapper element. */
-        get: function () {
-            if (!this.responsive) {
-                return (this.semicircle ? this.radius : this._diameter) + 'px';
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RoundProgressComponent.prototype, "_viewBox", {
-        /** Viewbox for the SVG element. */
-        get: function () {
-            var diameter = this._diameter;
-            return "0 0 " + diameter + " " + (this.semicircle ? this.radius : diameter);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RoundProgressComponent.prototype, "_paddingBottom", {
-        /** Bottom padding for the wrapper element. */
-        get: function () {
-            if (this.responsive) {
-                return this.semicircle ? '50%' : '100%';
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
+    /** Viewbox for the SVG element. */
+    RoundProgressComponent.prototype._getViewBox = function () {
+        var diameter = this._getDiameter();
+        return "0 0 " + diameter + " " + (this.semicircle ? this.radius : diameter);
+    };
+    /** Bottom padding for the wrapper element. */
+    RoundProgressComponent.prototype._getPaddingBottom = function () {
+        if (this.responsive) {
+            return this.semicircle ? '50%' : '100%';
+        }
+    };
+    /** Show or hide the internal circle relative to the input variable */
+    RoundProgressComponent.prototype._updateInternalCircleElement = function () {
+        this._internalCircle.nativeElement.style.display = this.internalCircle ? 'block' : 'none';
+    };
     __decorate([
-        core_1.ViewChild('path'),
-        __metadata("design:type", Object)
+        core_1.ViewChild('path', { static: false }),
+        __metadata("design:type", core_1.ElementRef)
     ], RoundProgressComponent.prototype, "_path", void 0);
+    __decorate([
+        core_1.ViewChild('internal_circle', { static: false }),
+        __metadata("design:type", core_1.ElementRef)
+    ], RoundProgressComponent.prototype, "_internalCircle", void 0);
     __decorate([
         core_1.Input(),
         __metadata("design:type", Number)
@@ -233,26 +232,26 @@ var RoundProgressComponent = /** @class */ (function () {
     RoundProgressComponent = __decorate([
         core_1.Component({
             selector: 'round-progress',
-            template: "\n    <svg xmlns=\"http://www.w3.org/2000/svg\" [attr.viewBox]=\"_viewBox\">\n      <circle *ngIf=\"internalCircle\"\n        [attr.fill]=\"internalCircleColor\"\n        [attr.cx]=\"radius\"\n        [attr.cy]=\"radius\"\n        [attr.r]=\"internalCircleRadius\"/>\n        \n      <circle\n        fill=\"none\"\n        [attr.cx]=\"radius\"\n        [attr.cy]=\"radius\"\n        [attr.r]=\"radius - stroke / 2\"\n        [style.stroke]=\"resolveColor(background)\"\n        [style.stroke-width]=\"strokeBackground\"/>\n\n      <path\n        #path\n        fill=\"none\"\n        [style.stroke-width]=\"stroke\"\n        [style.stroke]=\"resolveColor(color)\"\n        [style.stroke-linecap]=\"rounded ? 'round' : ''\"\n        [attr.transform]=\"getPathTransform()\"/>\n    </svg>\n  ",
+            changeDetection: core_1.ChangeDetectionStrategy.OnPush,
+            template: "\n    <svg xmlns=\"http://www.w3.org/2000/svg\" [attr.viewBox]=\"_getViewBox()\">\n      <circle #internal_circle\n        [attr.fill]=\"internalCircleColor\"\n        [attr.cx]=\"radius\"\n        [attr.cy]=\"radius\"\n        [attr.r]=\"internalCircleRadius\"/>\n\n      <circle\n        fill=\"none\"\n        [attr.cx]=\"radius\"\n        [attr.cy]=\"radius\"\n        [attr.r]=\"radius - stroke / 2\"\n        [style.stroke]=\"resolveColor(background)\"\n        [style.stroke-width]=\"strokeBackground\"/>\n\n      <path\n        #path\n        fill=\"none\"\n        [style.stroke-width]=\"stroke\"\n        [style.stroke]=\"resolveColor(color)\"\n        [style.stroke-linecap]=\"rounded ? 'round' : ''\"\n        [attr.transform]=\"getPathTransform()\"/>\n    </svg>\n  ",
             host: {
                 'role': 'progressbar',
                 '[attr.aria-valuemin]': 'current',
                 '[attr.aria-valuemax]': 'max',
-                '[style.width]': "responsive ? '' : _diameter + 'px'",
-                '[style.height]': '_elementHeight',
-                '[style.padding-bottom]': '_paddingBottom',
+                '[style.width]': "responsive ? '' : _getDiameter() + 'px'",
+                '[style.height]': '_getElementHeight()',
+                '[style.padding-bottom]': '_getPaddingBottom()',
                 '[class.responsive]': 'responsive'
             },
             styles: [
                 ":host {\n      display: block;\n      position: relative;\n      overflow: hidden;\n    }",
-                ":host.responsive {\n      width: 100%;\n      padding-bottom: 100%;\n    }",
-                ":host.responsive > svg {\n      position: absolute;\n      width: 100%;\n      height: 100%;\n      top: 0;\n      left: 0;\n    }"
+                ":host(.responsive) {\n      width: 100%;\n      padding-bottom: 100%;\n    }",
+                ":host(.responsive) > svg {\n      position: absolute;\n      width: 100%;\n      height: 100%;\n      top: 0;\n      left: 0;\n    }"
             ]
         }),
         __param(2, core_1.Inject(round_progress_config_1.ROUND_PROGRESS_DEFAULTS)),
         __metadata("design:paramtypes", [round_progress_service_1.RoundProgressService,
-            round_progress_ease_1.RoundProgressEase, Object, core_1.NgZone,
-            core_1.Renderer])
+            round_progress_ease_1.RoundProgressEase, Object, core_1.NgZone])
     ], RoundProgressComponent);
     return RoundProgressComponent;
 }());
